@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./compose/local/flask/Dockerfile
+    image: flask_api_base_webapp
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+    # '/start' is the shell script used to run the service
+    command: /start
+    # this volume is used to map the files and folders on the host to the container
+    # so if we change code on the host, code in the docker container will also be changed
+    volumes:
+      - .:/app
+    ports:
+      - "80:8080"
+    env_file:
+      - .envdir/.env
+    environment:
+      - FLASK_APP=flask_api_base.py
+    depends_on:
+      - redis
+      - mailhog
+
+  redis:
+    image: redis:6-alpine
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: ./compose/local/flask/Dockerfile
+    image: flask_api_base_celery_worker
+    deploy:
+      resources:
+        limits:
+          memory: 10240M
+    command: /start-celeryworker
+    volumes:
+      - .:/app
+    env_file:
+      - .envdir/.env
+    environment:
+      - FLASK_APP=flask_api_base.py
+    depends_on:
+      - redis
+      - mailhog
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./compose/local/flask/Dockerfile
+    image: flask_api_base_celery_flower
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    command: /start-flower
+    volumes:
+      - .:/app
+    env_file:
+      - .envdir/.env
+    environment:
+      - FLASK_APP=flask_api_base.py
+    ports:
+      - 5557:5555
+    depends_on:
+      - redis
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"
+      - "8025:8025"

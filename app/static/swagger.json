@@ -1,0 +1,353 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Swagger Documentation",
+    "version": "1.0.0",
+    "title": "Suppression Tool Swagger Documentation"
+  },
+  "tags": [
+    {
+      "name": "Suppression",
+      "description": "UI links for upload and suppression file select"
+    },
+    {
+      "name": "API",
+      "description": "For running suppression API through workers"
+    }
+  ],
+  "paths": {
+    "/review": {
+      "get": {
+        "tags": [
+          "Suppression"
+        ],
+        "summary": "For viewing review page with suppression options",
+        "responses": {
+          "200": {
+            "description": "renders review template and loads past suppressions of the user"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Suppression"
+        ],
+        "summary": "run suppressions on QC file",
+        "requestBody": {
+          "description": "Upload QC file and select relevant suppressions and apply them on QC",
+          "required": true
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/upload/": {
+      "get": {
+        "tags": [
+          "Suppression"
+        ],
+        "summary": "renders uploads template for suppression file upload",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Could reach server"
+          }
+        }
+      },
+      "post": {
+        "summary": "Uploads the master suppression files to s3",
+        "tags": [
+          "Suppression"
+        ],
+        "requestBody": {
+          "description": "request to s3 for upload",
+          "required": true
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/suppression": {
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Run suppression",
+        "requestBody": {
+          "description": "Run suppression on already uploaded suppression files",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/runSuppressionPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/runSuppressionResponse"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/suppressions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Gets suppressions from db",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Gets all suppressions in paginated format",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "suppression id",
+            "schema": {
+              "$ref": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": ""
+            }
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. Suppression request not found."
+          }
+        }
+      }
+    },
+    "/suppressions/<id>": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the suppression that we want to match",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Suppression"
+        ],
+        "summary": "Get suppression record with given ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "suppression id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. suppression request not found."
+          }
+        }
+      }
+    },
+    "/files/upload-suppression-files": {
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "To upload suppression files",
+        "requestBody": {
+          "description": "Suppression Request Post Object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/runSuppressionPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": ""
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/files/upload-qc-file": {
+      "post": {
+        "tags": [
+          "API"
+        ],
+        "summary": "For uploading qc files",
+        "requestBody": {
+          "description": "Uploading qc file",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/runSuppressionPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/id"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/files/presigned_url/<file_name>": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "Gets presigned url from s3 for the file",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "Gets presigned url from s3 for the file",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filename",
+            "required": true,
+            "description": "filename",
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+          },
+          "400": {
+            "description": "Failed. Misunderstood Request."
+          },
+          "404": {
+            "description": "Failed. file not found."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "id": {
+        "properties": {
+          "uuid": {
+            "type": "string"
+          }
+        }
+      },
+      "runSuppressionPostBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "format": "string"
+          },
+          "qc_file": {
+            "type": "string",
+            "format": "string"
+          }
+        }
+      },
+      "runSuppressionResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "format": "string"
+          },
+          "suppression": {
+            "type": "object",        
+            "additionalProperties": {
+              "id": {
+                "type": "number",
+                "format": "number"
+              },
+              "job_id": {
+                "type": "number",
+                "format": "number"
+              }
+            }
+          }  
+        }
+      }
+    }
+  }
+}
