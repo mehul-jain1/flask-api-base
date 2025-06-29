@@ -1,8 +1,96 @@
-<h1>Flask API Base </h1>
+# Flask API Base
 
+A feature-rich boilerplate for building RESTful APIs using Flask. This project provides a solid foundation with a modular structure, ready for extension and customization.
 
-<h2>Architecture</h2>
+## Architecture
+
 ![Flask API Base Architecture](compose/local/flask/api-base-arch.png)
+
+## Features
+
+- **Authentication**: JWT-based token authentication.
+- **Async Tasks**: Celery with Redis for background task processing.
+- **Database**: Flask-SQLAlchemy and Flask-Migrate for database operations.
+- **File Storage**: S3 integration for file uploads.
+- **Email**: Flask-Mail integration, with MailHog for local development.
+- **Containerization**: Fully containerized with Docker and Docker Compose.
+- **API Documentation**: Swagger UI for interactive API documentation.
+- **Configuration**: Environment-based configuration management.
+
+## Project Structure
+
+```
+flask-api-base/
+├── app/                  # Main application module
+│   ├── api/              # API blueprints and routes
+│   ├── models/           # SQLAlchemy models
+│   ├── services/         # Business logic
+│   ├── support/          # Helper modules (auth, S3, etc.)
+│   └── workers/          # Celery worker definitions
+├── compose/              # Docker-compose configurations
+├── migrations/           # Database migration scripts
+├── tests/                # Test suite
+└── ...
+```
+
+## Getting Started
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop) installed on your local machine.
+
+### Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd flask-api-base
+    ```
+
+2.  **Environment Variables:**
+    Create a `.env` file in the `.envdir` directory by copying the example.
+    ```bash
+    cp .env.example .envdir/.env
+    ```
+    Update `.envdir/.env` with your specific configurations (e.g., AWS credentials, secret key).
+
+### Running the Application
+
+1.  **Build and start the services:**
+    ```bash
+    docker-compose build
+    docker-compose up
+    ```
+
+2.  **Access the application:**
+    Once the containers are running, the following services will be available:
+    - **API**: `http://localhost/api`
+    - **Swagger Docs**: `http://localhost/api/docs`
+    - **MailHog**: `http://localhost:8025`
+    - **Flower (Celery Monitor)**: `http://localhost:5557`
+
+3.  **Stopping the application:**
+    To stop the running containers, press `Ctrl+C` in the terminal where `docker-compose up` is running.
+
+## Database Migrations
+
+To apply database migrations, first shell into the `web` container:
+```bash
+docker-compose exec web /bin/bash
+```
+Then, run the migration commands:
+```bash
+flask db migrate -m "Initial migration"
+flask db upgrade
+```
+
+## Seeding Data
+
+The project includes a seeder to populate the database with initial data.
+```bash
+docker-compose exec web /bin/bash
+flask seed run
+```
 
 
 <h2>Configurations</h2>
