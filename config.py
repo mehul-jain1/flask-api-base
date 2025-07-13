@@ -23,7 +23,7 @@ class Config(object):
 
     # Connect to the database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or env_config['DATABASE_URI']    
-
+    SQLALCHEMY_ECHO=True
     # Turn off the Flask-SQLAlchemy event system and warning
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     

@@ -9,6 +9,7 @@ from app.workers.user_worker import user_email_worker
 from app.support.files_uploader import FilesUploader
 from app.support.s3_helper import generate_presigned_s3_url
 from werkzeug.exceptions import RequestEntityTooLarge
+from werkzeug.exceptions import NotFound
 from app import celery
 from flask import Response
 import pdb
@@ -95,35 +96,46 @@ def postUserAPI(current_user):
 @api_bp.route('/users', methods=['GET'])
 @api_token_required('user_resource')
 def getAllUsersAPI(current_user):
-    records = User.query.order_by(User.id.desc())
+    try:
+        records = User.query.order_by(User.id.desc())
 
-    if records:
-        # default page = 1
-        page_number = int(request.args.get('pageNumber', 1))
+        if records:
+            # default page = 1
+            page_number = int(request.args.get('pageNumber', 1))
 
-        # default per_page = 10
-        page_size = int(request.args.get('pageSize', 10))
+            # default per_page = 10
+            page_size = int(request.args.get('pageSize', 10))
             
-        # query - default descending order
-        users = records.paginate(page=page_number, per_page=page_size)
-        responseObject = {
-            "status": "success",
-            "message": f"{len(users.items)} users fetched",
-            "users": [ u.serialize for u in users.items ],
-            "pagination": {
-                "total": users.total,
-                "page": page_number,
-                "per_page": page_size,
-                "pages": users.pages,
+            # query - default descending order
+            users = records.paginate(page=page_number, per_page=page_size)
+            responseObject = {
+                "status": "success",
+                "message": f"{len(users.items)} users fetched",
+                "users": [ u.serialize for u in users.items ],
+                "pagination": {
+                    "total": users.total,
+                    "page": page_number,
+                    "per_page": page_size,
+                    "pages": users.pages,
+                }
             }
-        }
-        return make_response(jsonify(responseObject)), HTTPStatus.ACCEPTED
-    else:
+            return make_response(jsonify(responseObject)), HTTPStatus.ACCEPTED
+        else:
+            responseObject = {
+                "status": "failed",
+                "message": "user query failed"
+            }
+            return make_response(jsonify(responseObject)), HTTPStatus.NO_CONTENT
+    except NotFound:
         responseObject = {
             "status": "failed",
-            "message": "user query failed"
+            "message": "error fetching users",
+            "pagination": {
+                "page": page_number,
+                "per_page": page_size,
+            }
         }
-        return make_response(jsonify(responseObject)), HTTPStatus.NO_CONTENT
+        return make_response(jsonify(responseObject)), HTTPStatus.NOT_FOUND
 
 @api_bp.route('/users/<id>', methods=['GET'])
 @api_token_required('user_resource')

@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
             'id': self.id,
             'name': self.name,
             'email': self.email,
-            'role': self.role.name,
+            'role': self.role.name if self.role is not None else None,
             'active': self.active,
             'created_at': self.created_at.strftime("%Y/%m/%d %H:%M:%S"),
             'updated_at': self.updated_at.strftime("%Y/%m/%d %H:%M:%S")
