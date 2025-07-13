@@ -7,15 +7,23 @@
   },
   "tags": [
     {
-      "name": "API",
-      "description": "Endpoints for the API"
+      "name": "Authentication",
+      "description": "Authentication endpoints for token generation"
+    },
+    {
+      "name": "Users",
+      "description": "User management endpoints (CRUD operations)"
+    },
+    {
+      "name": "Files",
+      "description": "File upload and management endpoints"
     }
   ],
   "paths": {
     "/api/token": {
       "post": {
         "tags": [
-          "API"
+          "Authentication"
         ],
         "summary": "Get API Token",
         "requestBody": {
@@ -49,7 +57,7 @@
     "/api/users": {
       "post": {
         "tags": [
-          "API"
+          "Users"
         ],
         "summary": "Create a new user",
         "requestBody": {
@@ -80,7 +88,7 @@
       },
       "get": {
         "tags": [
-          "API"
+          "Users"
         ],
         "summary": "Get all users",
         "parameters": [
@@ -119,7 +127,7 @@
     "/api/users/{id}": {
       "get": {
         "tags": [
-          "API"
+          "Users"
         ],
         "summary": "Get a single user",
         "parameters": [
@@ -152,7 +160,7 @@
     "/api/files/upload-files": {
       "post": {
         "tags": [
-          "API"
+          "Files"
         ],
         "summary": "Upload a file",
         "requestBody": {
@@ -184,7 +192,7 @@
     "/api/files/presigned_url": {
       "get": {
         "tags": [
-          "API"
+          "Files"
         ],
         "summary": "Get a presigned S3 URL",
         "parameters": [
