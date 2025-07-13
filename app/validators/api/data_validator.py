@@ -4,4 +4,4 @@ class DataValidator(object):
 
     def validate_data(self):
         errors = []
-        return errors
+        return errors 

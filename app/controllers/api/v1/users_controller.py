@@ -1,9 +1,9 @@
 from app.models.user import User
 from flask import request, make_response, jsonify
-from app.api import api_bp
+from app.api_routes import api_bp
 from http import HTTPStatus
-from app.api.schema_validator import SchemaValidator
-from app.api.data_validator import DataValidator
+from app.validators.api.schema_validator import SchemaValidator
+from app.validators.api.data_validator import DataValidator
 from app.support.auth_helper import api_token_required
 from app.workers.user_worker import user_email_worker
 from app.services.users.saver import UserSaver

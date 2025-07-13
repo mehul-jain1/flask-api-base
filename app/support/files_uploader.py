@@ -1,6 +1,6 @@
 from flask import make_response, jsonify
 from http import HTTPStatus
-from app.api.schema_validator import SchemaValidator   
+from app.validators.api.schema_validator import SchemaValidator   
 from app.support.s3_helper import put_object_to_s3
 from multiprocessing.pool import ThreadPool
 import time

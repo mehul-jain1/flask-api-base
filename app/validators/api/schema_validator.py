@@ -60,4 +60,4 @@ class SchemaValidator(object):
         except Exception as e:
             errors.append(format(e))
         
-        return errors
+        return errors 

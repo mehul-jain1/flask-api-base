@@ -1,6 +1,6 @@
 from app.models.user import User
 from flask import request, make_response, jsonify
-from app.api import api_bp
+from app.api_routes import api_bp
 from http import HTTPStatus
 from app.support.auth_helper import encode_jwt_token
 

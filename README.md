@@ -22,10 +22,20 @@ A feature-rich boilerplate for building RESTful APIs using Flask. This project p
 ```
 flask-api-base/
 ├── app/                  # Main application module
-│   ├── api/              # API blueprints and routes
+│   ├── api_routes.py     # API blueprint and route registration
+│   ├── controllers/      # API controllers organized by version
+│   │   └── api/
+│   │       └── v1/       # Version 1 controllers
+│   │           ├── auth_controller.py
+│   │           ├── users_controller.py
+│   │           └── files_controller.py
 │   ├── models/           # SQLAlchemy models
 │   ├── services/         # Business logic
 │   ├── support/          # Helper modules (auth, S3, etc.)
+│   ├── validators/       # Input validation classes
+│   │   └── api/
+│   │       ├── data_validator.py
+│   │       └── schema_validator.py
 │   └── workers/          # Celery worker definitions
 ├── compose/              # Docker-compose configurations
 ├── migrations/           # Database migration scripts

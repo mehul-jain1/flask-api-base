@@ -38,7 +38,7 @@ def create_app(app_name=PKG_NAME, **kwargs):
 
 
   # register routes
-  from app.api import api_bp
+  from app.api_routes import api_bp
   app.register_blueprint(api_bp, url_prefix='/api')
 
   SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
