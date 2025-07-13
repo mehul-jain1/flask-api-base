@@ -4,6 +4,7 @@ from http import HTTPStatus
 import jwt
 import time
 import datetime
+from datetime import timezone
 from app import Config
 from app.models.feature import Feature
 from app.models.role import Role
@@ -131,8 +132,8 @@ def get_jwt_token(request):
 def encode_jwt_token(user):
     try:
         payload = {
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=30, hours=0, minutes=0, seconds=0),
-            "iat": datetime.datetime.utcnow(),
+            "exp": datetime.datetime.now(timezone.utc) + datetime.timedelta(days=30, hours=0, minutes=0, seconds=0),
+            "iat": datetime.datetime.now(timezone.utc),
             "userEmail": user.email,
             "userId": user.id,
             "userName": user.name,

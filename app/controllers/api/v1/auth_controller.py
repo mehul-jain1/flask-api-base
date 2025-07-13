@@ -7,32 +7,48 @@ from app.support.auth_helper import encode_jwt_token
 
 @api_bp.route('/token', methods=['POST'])
 def getTokenAPI():
-    post_data = request.get_json()
-    user = User.query.filter_by(email=post_data['email']).first()
-    if not user:
-        responseObject = {
-            "status": "failed",
-            "message": "user not found"
-        }
-        return make_response(jsonify(responseObject)), HTTPStatus.NOT_FOUND
-    else:
-        try:
-            token = encode_jwt_token(user)
-            if token:
-                responseObject = {
-                    "status": "success",
-                    "token": token
-                }
-                return make_response(jsonify(responseObject)), HTTPStatus.ACCEPTED
-            else:
-                responseObject = {
-                    "status": "failed",
-                    "message": "token generation failed"
-                }
-                return make_response(jsonify(responseObject)), HTTPStatus.NO_CONTENT
-        except Exception as e:
+    try:
+        post_data = request.get_json()
+        
+        # Check if email is provided
+        if not post_data or 'email' not in post_data:
             responseObject = {
                 "status": "failed",
-                "message": format(e)
+                "message": "email is required"
             }
-            return make_response(jsonify(responseObject)), HTTPStatus.BAD_REQUEST 
+            return make_response(jsonify(responseObject)), HTTPStatus.BAD_REQUEST
+            
+        user = User.query.filter_by(email=post_data['email']).first()
+        if not user:
+            responseObject = {
+                "status": "failed",
+                "message": "user not found"
+            }
+            return make_response(jsonify(responseObject)), HTTPStatus.NOT_FOUND
+        else:
+            try:
+                token = encode_jwt_token(user)
+                if token:
+                    responseObject = {
+                        "status": "success",
+                        "token": token
+                    }
+                    return make_response(jsonify(responseObject)), HTTPStatus.ACCEPTED
+                else:
+                    responseObject = {
+                        "status": "failed",
+                        "message": "token generation failed"
+                    }
+                    return make_response(jsonify(responseObject)), HTTPStatus.BAD_REQUEST
+            except Exception as e:
+                responseObject = {
+                    "status": "failed",
+                    "message": format(e)
+                }
+                return make_response(jsonify(responseObject)), HTTPStatus.BAD_REQUEST
+    except Exception as e:
+        responseObject = {
+            "status": "failed",
+            "message": format(e)
+        }
+        return make_response(jsonify(responseObject)), HTTPStatus.BAD_REQUEST 

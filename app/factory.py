@@ -18,11 +18,17 @@ db = SQLAlchemy()
 migrate = Migrate()
 mail = Mail()
 
-def create_app(app_name=PKG_NAME, **kwargs):
+def create_app(app_name=PKG_NAME, config_override=None, **kwargs):
   logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
   app = Flask(app_name)
+  
+  # Apply base configuration
   app.config.from_object(Config)
+  
+  # Apply test configuration override if provided
+  if config_override:
+    app.config.update(config_override)
 
   if kwargs.get("celery"):
     init_celery(kwargs.get("celery"), app)
