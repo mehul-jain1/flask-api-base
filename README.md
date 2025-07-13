@@ -1,5 +1,8 @@
 # Flask API Base
 
+[![Python Tests](https://github.com/mehul-jain1/flask-api-base/actions/workflows/pytest.yml/badge.svg)](https://github.com/mehul-jain1/flask-api-base/actions/workflows/pytest.yml)
+[![Code Quality Check](https://github.com/mehul-jain1/flask-api-base/actions/workflows/check_and_validate.yml/badge.svg)](https://github.com/mehul-jain1/flask-api-base/actions/workflows/check_and_validate.yml)
+
 A feature-rich boilerplate for building RESTful APIs using Flask. This project provides a solid foundation with a modular structure, ready for extension and customization.
 
 ## Architecture
