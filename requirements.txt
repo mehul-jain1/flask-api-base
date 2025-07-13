@@ -55,7 +55,7 @@ metaflow==2.15.9
 numpy==2.2.5
 oauthlib==3.2.2
 openpyxl==3.0.10
-packaging==21.3
+packaging==22.0
 pandas==2.2.3
 pipreqs==0.4.11
 pluggy==1.6.0
