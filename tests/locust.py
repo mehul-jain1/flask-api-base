@@ -1,10 +1,12 @@
-from locust import HttpUser, task, between
 import random
+
+from locust import HttpUser, between, task
 
 token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTQ5OTMwOTksImlhdCI6MTc1MjQwMTA5OSwidXNlckVtYWlsIjoiYWRtaW5AdGVzdDIuY29tIiwidXNlcklkIjoxLCJ1c2VyTmFtZSI6ImFkbWluIiwidXNlclJvbGUiOiJhZG1pbiJ9.RfibrDwJXQXE4Lt-jir_Z5lFqAWYlz-m4XMjzdUsrOA"
 
 # locust --host=http://localhost:9000/ -f tests/locust.py --headless -u 100 -r 10 --run-time 15m
 # simulate with 100 users: each user will make requests with 1-3 second intervals
+
 
 class QuickstartUser(HttpUser):
     wait_time = between(1, 3)  # Wait 1-3 seconds between requests
@@ -14,7 +16,7 @@ class QuickstartUser(HttpUser):
         """Test GET /api/users endpoint"""
         response = self.client.get(
             "/api/users",
-            headers={"Authorization": token, "Content-Type": "application/json"}
+            headers={"Authorization": token, "Content-Type": "application/json"},
         )
         if response.status_code != 200:
             print(f"GET /api/users failed with status: {response.status_code}")
@@ -41,10 +43,15 @@ class QuickstartUser(HttpUser):
         user_id = random.randint(1, 4)  # Assuming you have users with IDs 1-4
         response = self.client.get(
             f"/api/users/{user_id}",
-            headers={"Authorization": token, "Content-Type": "application/json"}
+            headers={"Authorization": token, "Content-Type": "application/json"},
         )
-        if response.status_code not in [200, 404]:  # 404 is acceptable if user doesn't exist
-            print(f"GET /api/users/{user_id} failed with status: {response.status_code}")
+        if response.status_code not in [
+            200,
+            404,
+        ]:  # 404 is acceptable if user doesn't exist
+            print(
+                f"GET /api/users/{user_id} failed with status: {response.status_code}"
+            )
 
     @task(weight=1)
     def get_token(self):
@@ -52,9 +59,7 @@ class QuickstartUser(HttpUser):
         response = self.client.post(
             "/api/token",
             headers={"Content-Type": "application/json"},
-            json={
-                "email": "admin@test2.com"
-            }
+            json={"email": "admin@test2.com"},
         )
         if response.status_code not in [200, 202]:
             print(f"POST /api/token failed with status: {response.status_code}")
@@ -62,7 +67,7 @@ class QuickstartUser(HttpUser):
     def on_start(self):
         """Called when a user starts - can be used for setup"""
         print("User started")
-        
+
     def on_stop(self):
         """Called when a user stops - can be used for cleanup"""
         print("User stopped")

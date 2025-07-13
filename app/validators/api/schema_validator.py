@@ -18,7 +18,7 @@ class SchemaValidator(object):
             if not name or name == "":
                 errors.append("user name is required")
                 return errors
-            
+
             # email validation
             email = self.post_data.get("email", None)
             if not email or email == "":
@@ -59,5 +59,5 @@ class SchemaValidator(object):
 
         except Exception as e:
             errors.append(format(e))
-        
-        return errors 
+
+        return errors
