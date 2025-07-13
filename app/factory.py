@@ -66,5 +66,7 @@ def create_app(app_name=PKG_NAME, **kwargs):
   from app.models.feature import Feature
   from app.models.role import Role
   from app.models.feature_role import FeatureRole
-
+  from app.models.post import Post
+  from app.models.post_like import PostLike
+  
   return app
