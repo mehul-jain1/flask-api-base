@@ -77,8 +77,8 @@ flask-api-base/
 
 2.  **Access the application:**
     Once the containers are running, the following services will be available:
-    - **API**: `http://localhost/api`
-    - **Swagger Docs**: `http://localhost/api/docs`
+    - **API**: `http://localhost:9000/api`
+    - **Swagger Docs**: `http://localhost:9000/api/docs`
     - **MailHog**: `http://localhost:8025`
     - **Flower (Celery Monitor)**: `http://localhost:5557`
 
@@ -105,31 +105,61 @@ docker-compose exec web /bin/bash
 flask seed run
 ```
 
+## Configuration
 
-<h2>Configurations</h2>
+- Application configs are stored at `.envdir/.env`
+- Updated the `GUNICORN_CMD_ARGS="--bind 0.0.0.0:9000 --workers=2 --threads=4 --worker-class=gthread --worker-tmp-dir /dev/shm"` for CMD line in Docker file.
 
-* Application configs are stored at this location 
-* * `.envdir\.env`
-* updated the `GUNICORN_CMD_ARGS="--bind 0.0.0.0:8080 --workers=2 --threads=4 --worker-class=gthread --worker-tmp-dir /dev/shm"` for CMD line in Docker file.
+## Pipeline Setup
 
+The project includes GitHub Actions workflows for continuous integration:
+- **pytest.yml**: Runs the test suite
+- **check_and_validate.yml**: Code quality checks
 
+## Docker Setup
 
+1. Install Docker Desktop
+2. Navigate to the root of the directory in terminal. You should be at the same level as the `docker-compose.yml` file.
+3. Run `docker-compose build`
+4. The step above will take around 5-10 minutes for the first time as the images get downloaded. Subsequent executions will be faster.
+5. If the above step runs to its end successfully, run `docker image ls`. You should see below images:
+   - `flask_api_base_celery_worker`
+   - `flask_api_base_webapp`
+   - `flask_api_base_celery_flower`
+   - `redis`
+6. Run `docker-compose up`
+7. If the above runs successfully, the application can be browsed at `http://localhost:9000`
+8. If you wish to stop the container, press `ctrl+c` in the terminal
 
-<h2>Pipeline Setup<h2>
+## API Documentation
 
+The API documentation is available via Swagger UI at `http://localhost:9000/api/docs` when the application is running.
 
-<h2>Docker Setup</h2>
+## Testing
 
-* Install Docker Desktop
-* Navigate to the root of the directory in terminal. You should be at the same level as the `docker-compose.yml` file.
-* Run `docker-compose build`
-* The step above will take around 5-10 minutes for the first time as the images get downloaded. Subsequent executions will be faster. 
-* If the above step runs to its end successfully, run `docker image ls`. You should see below 5 images
-* * `flask_api_base_celery_worker`
-* * `flask_api_base_webapp`
-* * `flask_api_base_celery_flower`
-* * `flask_api_base_celery_beat`
-* * `redis`
-* Run `docker-compose up`
-* If the above runs successfully, the applcation can be browsed at `http://127.0.0.1:5010/auth/login`
-* If you wish to stop the container, press `ctrl+c` in the terminal 
+Run the test suite using:
+```bash
+docker-compose exec web python -m pytest
+```
+
+Or run tests with coverage:
+```bash
+docker-compose exec web python -m pytest --cov=app
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Run the test suite
+6. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Additional Resources
+
+For a comprehensive comparison between SQLAlchemy and ActiveRecord patterns, see [SQLALCHEMY_VS_ACTIVERECORD_GUIDE.md](SQLALCHEMY_VS_ACTIVERECORD_GUIDE.md). 

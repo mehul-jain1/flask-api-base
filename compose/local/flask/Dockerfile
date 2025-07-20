@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.10.8-buster
+FROM python:3.13.5
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -9,7 +9,7 @@ RUN apt-get update \
   # dependencies for building Python packages
   && apt-get install -y build-essential \
   # Additional dependencies
-  && apt-get install -y telnet netcat \
+  && apt-get install -y telnet netcat-openbsd \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*

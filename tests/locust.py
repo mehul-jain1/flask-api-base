@@ -21,21 +21,21 @@ class QuickstartUser(HttpUser):
         if response.status_code != 200:
             print(f"GET /api/users failed with status: {response.status_code}")
 
-    # @task(weight=1)
-    # def create_user(self):
-    #     """Test POST /api/users endpoint"""
-    #     user_id = random.randint(1000, 9999)
-    #     response = self.client.post(
-    #         "/api/users",
-    #         headers={"Authorization": token, "Content-Type": "application/json"},
-    #         json={
-    #             "name": f"perf-test-user-{user_id}",
-    #             "email": f"perf-test-user-{user_id}@test.com",
-    #             "role": "admin"
-    #         }
-    #     )
-    #     if response.status_code not in [200, 201]:
-    #         print(f"POST /api/users failed with status: {response.status_code}")
+    @task(weight=1)
+    def create_user(self):
+        """Test POST /api/users endpoint"""
+        user_id = random.randint(1000, 9999)
+        response = self.client.post(
+            "/api/users",
+            headers={"Authorization": token, "Content-Type": "application/json"},
+            json={
+                "name": f"perf-test-user-{user_id}",
+                "email": f"perf-test-user-{user_id}@test.com",
+                "role": "manager"
+            }
+        )
+        if response.status_code not in [200, 201]:
+            print(f"POST /api/users failed with status: {response.status_code}")
 
     @task(weight=2)
     def get_user_by_id(self):

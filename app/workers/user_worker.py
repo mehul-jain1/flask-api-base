@@ -8,7 +8,7 @@ def user_email_worker(id):
     print("printing inside worker")
     user = User.query.get(id)
     if user:
-        Mailer.send_welcome_email(user)
+        # Mailer.send_welcome_email(user)
         return True
     else:
         return False

@@ -17,7 +17,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "80:8080"
+      - "9000:9000"
     env_file:
       - .envdir/.env
     environment:
@@ -37,7 +37,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 10240M
+          memory: 3000M
     command: /start-celeryworker
     volumes:
       - .:/app
